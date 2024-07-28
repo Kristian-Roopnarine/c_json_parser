@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-int CHUNKSIZE = 16 * 1024;
+int BLKSIZE = 256 * 1024;
 
 char *read_argv_params(int, char **);
 
@@ -19,28 +19,19 @@ int main(int argc, char **argv) {
     fd = stdin;
   }
 
+  size_t bytes_read = 0;
   size_t size = 0;
-  size_t index = 0;
-  char *buffer = NULL, *tmp = NULL;
-  int ch;
-
-  while ((ch = fgetc(fd)) != EOF) {
-    if (size <= index) {
-      size += CHUNKSIZE;
-      tmp = realloc(buffer, size);
-      if (!tmp) {
-        printf("issue with allocating more memory");
-        free(buffer);
-        break;
-      }
-      buffer = tmp;
-    }
-    buffer[index++] = ch;
-  }
+  char *tmp = NULL;
+  char buffer[BLKSIZE];
+  do {
+    bytes_read = fread(buffer, sizeof(char), BLKSIZE, fd);
+    size += bytes_read;
+  } while (bytes_read != 0);
 
   free(tmp);
+  fclose(fd);
 
-  Lexer *lexer = new_lexer(buffer, index);
+  Lexer *lexer = new_lexer(buffer, size);
   Parser *parser = new_parser(lexer);
   int res = parse_json(parser);
   printf("%d\n", res);
