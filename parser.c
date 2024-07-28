@@ -21,13 +21,17 @@ int parse_key(Parser *p) { return 0; }
 int parse_value(Parser *p) { return 0; }
 
 int parse_json(Parser *p) {
-  if (strcmp(p->currToken->type, LBRACE) != 0) {
+  if (!peek_token_is(p->currToken->type, LBRACE)) {
     return 1;
   }
 
-  if (strcmp(p->peekToken->type, RBRACE) == 0) {
+  if (peek_token_is(p->currToken->type, RBRACE)) {
     return 0;
   }
 
   return 1;
+}
+
+bool peek_token_is(const char *current_type, const char *expected_type) {
+  return strcmp(current_type, expected_type) == 0;
 }
