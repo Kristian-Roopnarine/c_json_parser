@@ -2,7 +2,6 @@
 #include "parser.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
 int BLKSIZE = 256 * 1024;
 
@@ -21,14 +20,12 @@ int main(int argc, char **argv) {
 
   size_t bytes_read = 0;
   size_t size = 0;
-  char *tmp = NULL;
-  char buffer[BLKSIZE];
+  char *buffer = (char *)malloc(sizeof(char) * BLKSIZE);
   do {
     bytes_read = fread(buffer, sizeof(char), BLKSIZE, fd);
     size += bytes_read;
   } while (bytes_read != 0);
 
-  free(tmp);
   fclose(fd);
 
   Lexer *lexer = new_lexer(buffer, size);
