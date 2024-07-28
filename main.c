@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int BLKSIZE = 256 * 1024;
+int BLOCKSIZE = 256 * 1024;
 
 char *read_argv_params(int, char **);
 
@@ -20,9 +20,9 @@ int main(int argc, char **argv) {
 
   size_t bytes_read = 0;
   size_t size = 0;
-  char *buffer = (char *)malloc(sizeof(char) * BLKSIZE);
+  char *buffer = (char *)malloc(sizeof(char) * BLOCKSIZE);
   do {
-    bytes_read = fread(buffer, sizeof(char), BLKSIZE, fd);
+    bytes_read = fread(buffer, sizeof(char), BLOCKSIZE, fd);
     size += bytes_read;
   } while (bytes_read != 0);
 
